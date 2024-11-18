@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+	<head>
+		<link name="TimesNewRoman"
+		      type="font"
+		      subtype="truetype"
+		      src="${libPdf.font.times}"
+		      src-bold="${libPdf.font.times_bold}"
+		      src-italic="${libPdf.font.times_italic}"
+		      src-bolditalic="${libPdf.font.times_bolditalic}"
+		      bytes="2"/>
+		<macrolist>
+			<macro id="empty-macro">
+				<!-- no content -->
+			</macro>
+			<macro id="default-header">
+				<!-- regular header content goes here -->
+				<table>
+					<tr>
+						<td style="width:50%; border:none"
+						    align="left"
+						    class="bold">${record.custrecord_scv_tof_sub?c_upper_case}</td>
+						<td class=" regular "
+						    rowspan="2"
+						    style="width:50%; border:none"
+						    align="center">
+							<p class="bold">Mẫu số 01 - VT</p>
+							<p class="italic"
+							   align="center">(Ban hành theo Thông tư số 133/2016/TT-BTC <br/>ngày 26/8/2016 của Bộ Tài chính)</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="width:50%; padding : 5px 70px 5px 2px ;border:none">${companyInformation.addressText}</td>
+					</tr>
+				</table>
+			</macro>
+			<macro id="default-footer">
+				<!-- regular footer content goes here -->
+               <table style="width:100%; font-size:8pt; border:none">
+        <tr>
+            <td style="width:100%; text-align:right; border:none" align="center">
+                Page <pagenumber/> of <totalpages/>
+            </td>
+        </tr>
+    </table>
+			</macro>
+		</macrolist>
+		<style>
+      table {
+        font-size: 10pt;
+        width: 100%;
+        border-collapse : collapse;
+        text-align : center;
+      }
+      th {
+        font-weight: bold;
+        font-size: 8pt;
+        vertical-align: middle;
+        padding: 5px 5px 5px 5px;
+        background-color: #e3e3e3;
+        color: #333333;
+        padding-bottom: 10px;
+        padding-top: 10px;
+
+        font-family : "TimesNewRoman";
+        font-weight : bold;
+
+        border-collapse : collapse;
+        border : 0.5px black;
+      }
+
+      td{
+        border : 0.5px black;
+        border-collapse : collapse;
+        align : center;
+      }
+
+      .center-container {
+            text-align : center;
+            align-content : center;
+            align-items : center;
+        }
+
+        body{
+          font-family : TimesNewRoman;
+          font-size : 10pt;
+        }
+
+        .italic{
+          font-family : TimesNewRoman;
+          font-style : italic;
+        }
+
+        .bold{
+          font-family : TimesNewRoman;
+          font-weight : bold;
+        }
+
+        .bolditalic{
+          font-family: TimesNewRoman;
+          font-weight : bold;
+          font-style  : italic;
+        }
+		</style>
+	</head>
+	<body header="default-header"
+	      header-height="12%"
+          footer="default-footer" footer-height="20pt"
+	      padding="0.5in 0.5in 0.5in 0.5in"
+	      size="A4">
+		<table>
+			<tr>
+				<td style="width:30%; border:none"/>
+				<td align="center"
+				    style="border:none; font-size:12pt ">
+					<p class="bold">
+                      PHIẾU NHẬP KHO</p>
+				</td>
+				<td style="width:33%; border:none"/>
+			</tr>
+			<tr>
+				<td style="border:none"/>
+				<td style="border:none">
+					<p class="bolditalic">Ngày ${record.created?string.dd} tháng ${record.created?string.MM} năm ${record.created?string.yyyy}</p>
+				</td>
+				<td style="border:none"/>
+			</tr>
+			<tr>
+				<td style="border:none"/>
+				<td style="border:none">
+					<p>Số: ${record.custrecord_scv_test_order_code}</p>
+				</td>
+				<td style="border:none"/>
+			</tr>
+		</table>
+		<br/>
+		<table>
+			<tr>
+				<td style="border:none; width:50%"
+				    align="left">
+					<span class="bold">Khách hàng nhận: </span>${record.custrecord_scv_test_order_customer}</td>
+			</tr>
+			<tr>
+				<td style="border:none; width: 20%"
+				    align="left">
+					<span class="bold">Địa chỉ (bộ phận): </span>${companyinformation.addresstext}</td>
+			</tr>
+			<tr>
+				<td style="border:none"
+				    align="left">
+					<span class="bold">Theo hóa đơn số ... </span>ngày ${record.created?string.dd} tháng ${record.created?string.MM} năm ${record.created?string.yyyy} của ${record.custrecord_scv_test_order_customer}</td>
+			</tr>
+			<tr>
+				<td style="border:none"
+				    align="left">
+					<span class="bold">Nhập tại kho (ngăn lô): </span>
+				</td>
+			</tr>
+			<tr>
+				<td style="border:none"
+				    align="left">
+					<span class="bold">Địa điểm: </span>${companyinformation.shippingaddress_text}</td>
+			</tr>
+		</table>
+		<br/>
+		<#if record.recmachcustrecord_scv_test_odl_order?has_content>
+		<table>
+			<thead>
+				<tr>
+					<th rowspan="2">
+						<p class="center-container">STT</p>
+					</th>
+					<th rowspan="2">
+						<p class="center-container">Tên, nhãn hiệu, quy cách, phẩm chất vật tư, dụng cụ sản phẩm, hàng hóa</p>
+					</th>
+					<th rowspan="2">
+						<p class="center-container">Mã số</p>
+					</th>
+					<th rowspan="2"
+					    align="center">
+						<p class="center-container">Đơn vị tính</p>
+					</th>
+					<th colspan="2"
+					    align="center">
+						<p class="center-container">Số lượng</p>
+					</th>
+					<th rowspan="2">
+						<p class="center-container">Đơn giá</p>
+					</th>
+					<th rowspan="2">
+						<p class="center-container">Thành tiền</p>
+					</th>
+				</tr>
+				<tr>
+					<th>
+						<p class="center-container">Yêu cầu</p>
+					</th>
+					<th>
+						<p class="center-container">Thực nhập</p>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<#list record.recmachcustrecord_scv_test_odl_order
+				       as
+				       test_order_line>
+				<tr>
+					<td style="border : 0.5px black">
+						<p class="center-container">${test_order_line?index + 1}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p class="regular"
+						   align="left">${test_order_line.custrecord_scv_test_odl_item}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p align="right">${test_order_line.id}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p class="center-container">${test_order_line.custrecord_scv_test_odl_uom}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p align="right">${test_order_line.custrecord_scv_test_odl_quantity}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p align="right">${test_order_line.custrecord_scv_test_odl_quantity}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p align="right">${test_order_line.custrecord_scv_test_odl_price}</p>
+					</td>
+					<td style="border : 0.5px black">
+						<p align="right">${test_order_line.custrecord_scv_test_odl_amount}</p>
+					</td>
+				</tr>
+			</#list>
+			<tr>
+				<td/>
+				<td align="left">
+					<p>Cộng</p>
+				</td>
+				<td align="right">x</td>
+				<td align="right">x</td>
+				<td align="right">x</td>
+				<td align="right">x</td>
+				<td align="right">x</td>
+				<td align="right">${record.custrecord_scv_test_order_totalamount}</td>
+			</tr>
+		</tbody>
+	</table>
+</#if>
+<p> - Tổng số tiền (viết bằng chữ): ${additionalData.spelloutAmount?cap_first} đồng</p>
+<p> - Số chứng từ gốc kèm theo:</p>
+<table>
+	<tr>
+		<td style="width:25%; border:none"/>
+		<td style="width:25%; border:none"/>
+		<td style="width:25%; border:none"/>
+		<td style="width:25%; border:none"
+		    class="italic">Ngày ${record.created?string.dd} tháng ${record.created?string.MM} năm ${record.created?string.yyyy}</td>
+	</tr>
+	<tr>
+		<td style="width:25%; border:none"
+		    class="bold">Người lập phiếu</td>
+		<td style="width:25%; border:none"
+		    class="bold">Người giao hàng</td>
+		<td style="width:25%; border:none"
+		    class="bold">Thủ kho</td>
+		<td style="width:25%; border:none"
+		    class="bold">Kế toán trưởng</td>
+	</tr>
+	<tr>
+		<td style="width:25%; border:none"
+		    class="italic">(Ký, họ tên)</td>
+		<td style="width:25%; border:none"
+		    class="italic">(Ký, họ tên)</td>
+		<td style="width:25%; border:none"
+		    class="italic">(Ký, họ tên)</td>
+		<td style="width:25%; border:none"
+		    class="italic">(Ký, họ tên)</td>
+	</tr>
+</table>
+</body>
+</pdf>
