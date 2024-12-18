@@ -1,0 +1,10 @@
+<advancedpdftemplate scriptid="custtmpl_test_order" standard="STDTMPLCR_SCV_TEST_ORDER">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>CUSTOMRECORD</printtype>
+  <recordtype>[scriptid=customrecord_scv_test_order]</recordtype>
+  <title>Test Order</title>
+  <trantype>CUSTOM</trantype>
+</advancedpdftemplate>

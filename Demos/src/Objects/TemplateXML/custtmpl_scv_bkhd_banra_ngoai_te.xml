@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_scv_bkhd_banra_ngoai_te" standard="STDTMPLSVENDCRED">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>T</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>Bảng kê hóa đơn bán ra (Ngoại tệ)</title>
+  <trantype>VENDCRED</trantype>
+</advancedpdftemplate>

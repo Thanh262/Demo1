@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_scv_bkhd_banra" standard="STDTMPLUKVENDPYMT">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>Bảng kê hóa đơn bán ra</title>
+  <trantype>VENDPYMT</trantype>
+</advancedpdftemplate>

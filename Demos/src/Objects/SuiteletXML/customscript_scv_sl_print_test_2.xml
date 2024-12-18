@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_scv_sl_print_test_2">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>SL Print Test 2</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Demo1/sl/scv_sl_print_test_2.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_scv_sl_print_test_2">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole></runasrole>
+      <status>TESTING</status>
+      <title>SL Print Test 2</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

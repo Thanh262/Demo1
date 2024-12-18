@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_scv_sl_sontest">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>SL Son Test</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Nvd/sl/scv_sl_sontest.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_scv_sl_sontest">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole></runasrole>
+      <status>TESTING</status>
+      <title>SL Son Test</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

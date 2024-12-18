@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_scv_thh_sl_flow_sql_ssrch">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>Suitelet SQL SaveSearch Learn</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Demo1/sl/scv_thh_sl_flow_sql_ssrch.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_scv_thh_sl_flow_sql_ssrch">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>ERROR</loglevel>
+      <runasrole></runasrole>
+      <status>RELEASED</status>
+      <title>Suitelet SQL SaveSearch Learn</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

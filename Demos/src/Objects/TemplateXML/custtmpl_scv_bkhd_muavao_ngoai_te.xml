@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_scv_bkhd_muavao_ngoai_te" standard="STDTMPLBOM">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>BOM</printtype>
+  <title>Bảng kê hóa đơn mua vào (ngoại tệ)</title>
+  <trantype>WORKORD</trantype>
+</advancedpdftemplate>

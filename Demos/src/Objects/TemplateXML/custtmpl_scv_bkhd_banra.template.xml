@@ -1,0 +1,151 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>
+<#if .locale == "ru_RU">
+    <link name="verdana" type="font" subtype="opentype" src="${nsfont.verdana}" src-bold="${nsfont.verdana_bold}" bytes="2" />
+  <#else>
+  <link name="Arial" type="font" subtype="truetype"
+        src="https://9684031.app.netsuite.com/core/media/media.nl?id=3063&amp;c=9684031&amp;h=NQAELmT540rfE5z_YTAOj2_oz9C2riZQXL4ZndgOjUHpH240&amp;_xt=.ttf"
+        src-bold="https://9684031.app.netsuite.com/core/media/media.nl?id=3060&amp;c=9684031&amp;h=VRMnMS9G-U6-eJ7eWeyZRD2byILyUj3mcjZQkoug5te4gj3X&amp;_xt=.ttf"
+        src-italic="https://9684031.app.netsuite.com/core/media/media.nl?id=3061&amp;c=9684031&amp;h=smdSHeMgMgMHl50NbUFbV4fJx5xIcrAC-YbPcCGfW7-xKWLO&amp;_xt=.ttf"
+        src-bolditalic="https://9684031.app.netsuite.com/core/media/media.nl?id=3062&amp;c=9684031&amp;h=VRtHBYdpNRU-zkQenPmbUVxPGMpwd0zn4go2TJ-Q8EBJwVEB&amp;_xt=.ttf"
+        bytes="2"/>
+</#if>
+
+  <#setting date_format="dd-MMM-yyyy"/>
+    <style type="text/css">table {
+            <#if .locale == "zh_CN">
+                font-family: stsong, sans-serif;
+            <#elseif .locale == "zh_TW">
+                font-family: msung, sans-serif;
+            <#elseif .locale == "ja_JP">
+                font-family: heiseimin, sans-serif;
+            <#elseif .locale == "ko_KR">
+                font-family: hygothic, sans-serif;
+            <#elseif .locale == "ru_RU">
+                font-family: verdana;
+            <#else>
+                font-family: Arial, sans-serif;
+            </#if>
+                font-size: 11pt;
+                table-layout: fixed;
+            }
+      body{
+        font-family: Arial, sans-serif;
+        font-size:11pt;
+      }
+      table{
+        width: 100%;
+        border-collapse: collapse;
+        table-layout:fixed;
+      }
+      .item-head td {
+        vertical-align: middle;
+        border: 1px solid;
+        border-right: none;
+      }
+      .item-body td {
+        vertical-align: middle;
+        border-left: 1px solid;
+        border-bottom: 1px solid;
+      }
+      .item-head td:last-child, .item-body td:last-child {
+        border-right: 1px solid;
+      }
+      .item-head tr:first-child td {
+        border: none;
+      }
+      .item-head tr:last-child td {
+        border-top: none;
+      }
+</style>
+</head>
+  <#setting number_format=",##0">
+  <#setting locale="de_DE">
+<body size="A4-LANDSCAPE" padding="0.3in 0.3in 0.3in 0.3in">
+  <table>
+    <tr margin-bottom="6px">
+      <td colspan="75"></td>
+      <td align="left" colspan="25" border="1px solid"><p align="left"><span font-size="10pt">Mẫu số: <b>01-1/HT</b></span><br />
+        <span font-size="9pt"><i>(Ban hành kèm theo Thông tư số <br />80/2021/TT-BTC ngày 29 tháng 9 năm 2021 của Bộ <br />trưởng Bộ Tài chính)</i></span></p>
+      </td>
+    </tr>
+    <tr><td colspan="100" align="center"><p align="center" font-size="13pt"><b>BẢNG KÊ HOÁ ĐƠN, CHỨNG TỪ HÀNG HOÁ, DỊCH VỤ BÁN RA</b></p></td></tr>
+    <tr><td colspan="100" align="center"><p align="center"><i>(Kèm theo Giấy đề nghị hoàn trả khoản thu NSNN số 01/2022-11/2022 ngày 23 tháng 12 năm 2022)</i></p></td></tr>
+    <tr><td colspan="100" align="center"><p align="center">Kỳ đề nghị hoàn thuế: ${jsonData.kyDeNghi?html}</p></td></tr>
+    <tr><td colspan="100" align="left"><p align="left">Tên người nộp thuế: ${subsidiary.legalname}</p></td></tr>
+    <tr><td colspan="100" align="left"><p align="left">Mã số thuế: ${subsidiary.federalidnumber}</p></td></tr>
+    <tr><td colspan="100" align="left"><p align="left">Tên đại lý thuế (nếu có):…..………………..........................................................</p></td></tr>
+    <tr><td colspan="100" align="left"><p align="left">Mã số thuế:</p></td></tr>
+    <tr margin-top="8px"><td colspan="100" align="right" margin-right="40px"><p align="right"><i>Đơn vị tiền: Đồng Việt Nam</i></p></td></tr>
+  </table>
+   <table margin-top="4px" font-size="10pt">
+    <thead class="item-head">
+      <tr>
+        <td width="4%"></td><td width="7%"></td><td width="7%"></td><td width="6%"></td><td width="14%"></td>
+        <td width="9%"></td><td width="14%"></td><td width="9%"></td><td width="9%"></td><td width="6%"></td>
+        <td width="9%"></td><td width="6%"></td>
+      </tr>
+      <tr>
+        <td align="center" colspan="4"><p align="center"><b>Hóa đơn, dịch vụ xuất khẩu nộp thuế</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Người bán</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Mã số thuế</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Diễn giải</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Tiền hàng</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Thuế</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Thuế suất</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Thành tiền</b></p></td>
+        <td align="center" rowspan="2"><p align="center"><b>Ghi chú</b></p></td>
+      </tr>
+      <tr>
+        <td align="center"><p align="center"><b>Mẫu số</b></p></td>
+        <td align="center"><p align="center"><b>Số Seri</b></p></td>
+        <td align="center"><p align="center"><b>Số chứng từ</b></p></td>
+        <td align="center" border-right="none"><p align="center"><b>Ngày chứng từ</b></p></td>
+      </tr>
+    </thead>
+    <tbody class="item-body">
+      <#list jsonData.bodyData as item>
+        <#if jsonData.bodyData?size -1 == item?index>
+          <tr font-weight="bold"><#else><tr>
+        </#if>
+          <td align="center"><p align="center">${item.MauSo?html}</p></td>
+          <td align="center"><p align="center">${item.Seri?html}</p></td>
+          <td align="center"><p align="center">${item.SoHoaDon}</p></td>
+          <td align="center"><p align="center">${item.NgayHoaDon}</p></td>
+          <td align="left"><p align="left">${item.NguoiBan?html}</p></td>
+          <td align="center"><p align="center">${item.MaSoThue}</p></td>
+          <td align="left"><p align="left">${item.NoiDung?html}</p></td>
+          <td align="right"><p align="right">${item.TienHang}</p></td>
+          <td align="right"><p align="right">${item.TienThue}</p></td>
+          <td align="right"><p align="right">${item.ThueSuat}</p></td>
+          <td align="right"><p align="right">${item.ThanhTien}</p></td>
+          <td align="center"><p align="center"></p></td>
+        </tr>
+      </#list>
+    </tbody>
+  </table>
+  <table margin-top="8px">
+    <tr><td colspan="100"><p>Tôi cam đoan số liệu khai trên là đúng và chịu trách nhiệm trước pháp luật về số liệu đã khai./.</p></td></tr>
+    <tr margin-top="4px"><td colspan="50"></td><td colspan="50" align="center"><p align="center">..., ngày....... tháng....... năm.......</p></td></tr>
+    <tr>
+      <td colspan="100">
+        <table padding="-2px">
+          <tr>
+            <td margin-left="16px" colspan="50" align="left"><p align="left"><b>NHÂN VIÊN ĐẠI LÝ THUẾ</b></p></td>
+            <td colspan="50" align="center"><p align="center"><b>NGƯỜI NỘP THUẾ hoặc</b></p></td>
+          </tr>
+          <tr>
+            <td margin-left="16px" colspan="50" align="left"><p align="left">Họ và tên:.............................</p></td>
+            <td colspan="50" align="center"><p align="center"><b>ĐẠI DIỆN HỢP PHÁP CỦA NGƯỜI NỘP THUẾ</b></p></td>
+          </tr>
+          <tr>
+            <td margin-left="16px" colspan="50" align="left"><p align="left">Chứng chỉ hành nghề số:......</p></td>
+            <td colspan="50" align="center"><p align="center"><i>(Chữ ký, ghi rõ họ tên; chức vụ và đóng dấu (nếu có)/Ký điện tử)</i></p></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</pdf>

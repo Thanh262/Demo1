@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript"
+            src="https://9363397.app.netsuite.com/core/media/media.nl?id=8054&c=9363397&h=Yqod5xAWpxJBN55w1do6XLHcbEajJSo5oJg-R_FmGKqeJOMA&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=8055&c=9363397&h=2PNnZJIgZ53nMfztkogvwLa6anhZiDswDDgMNq6GuwDmMJ6l&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=8056&c=9363397&h=TuHtw-j_HMCI4PyCkfFdgCqxfcd4sN4HrPELcguREW42jJMJ&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=1496&c=9363397&h=-jhuz5-21N8CYZ6Av9vyooO-pPw4N18snk48FXBHuKJ9muQz&_xt=.js"></script>
+    <style>
+    </style>
+    <script>
+        const URL_SL = '/app/site/hosting/scriptlet.nl?script=customscript_scv_sl_call_data&deploy=customdeploy_scv_sl_call_data';
+        $(() => {
+            window.onExport = async (params) => {
+                try {
+                    showLoadingDialog(true);
+                    let objResponse = await postRequestByAjax(URL_SL, {...params, isExcel: 'T'});
+                    if (objResponse.isSuccess === false) {
+                        alert(objResponse.msg);
+                        showLoadingDialog(false);
+                        return;
+                    }
+
+                    let workbook = await loadWorkbookFromUrl(objResponse.url);
+                    let objData = objResponse.data;
+                    let fileName = '';
+                    switch (params.templateId) {
+                        case 'scv_xlsx_sales_contract_vn':
+                            onEXP_sc_vn(workbook, objData);
+                            fileName = 'Hợp đồng mua bán (VN)';
+                            break;
+                        case 'scv_xlsx_sales_contract_en':
+                            onEXP_sc_en(workbook, objData);
+                            fileName = 'Hợp đồng mua bán (EN)';
+                            break;
+                        case 'scv_xlsx_commercial_invoice':
+                            onEXP_cl(workbook, objData);
+                            fileName = 'Commercial Invoice';
+                            break;
+                        case 'scv_xlsx_insurance':
+                            onEXP_ic(workbook, objData);
+                            fileName = 'Insurance';
+                            break;
+                        case 'scv_xlsx_packing_list':
+                            onEXP_gl(workbook, objData);
+                            fileName = 'Packing List';
+                            break;
+                        case 'scv_xlsx_detail_bl':
+                            onEXP_bl(workbook, objData);
+                            fileName = 'Details BL';
+                            break;
+
+
+                    }
+                    fileName = fileName || params.templateId
+                    await saveWorkbook(workbook, fileName + '.xlsx');
+                    showLoadingDialog(false);
+                } catch (error) {
+                    alert(error.message.toString());
+                    showLoadingDialog(false);
+                }
+            };
+        });
+
+        const onEXP_sc_en = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let arrData = objData.arrSL || [];
+            let idxSourceRow = 13;
+            let idxRowData = 14;
+            let colId = ['stt', 'item_display', 'description', 'units', 'quantity',
+                'dongia', 'thanhtien', 'memo_2'];
+            idxRowData = insertValueTable({curSheet, idxSourceRow, idxRowData, arrData, colId});
+            let entityField = objData.entityField;
+            let sub = objData.sub;
+            let objCellReplace = {
+                'A4': {'ben_ban': sub.legalname},
+                'A5': {'diachi_ban': sub.mainaddress_text},
+                'A6': {'phone_ban': sub.phone_no},
+                'A7': {'nguoidaidien_ban': objData.nguoi_dai_dien},
+                'A8': {'chucvu_ban': objData.chuc_vu},
+                'A11': {'ten_mat_hang': objData.so_name_of_goods},
+                'E2': {'sc_name': objData.sc_name},
+                'E3': {'sc_date': objData.sc_date},
+                'E4': {'ben_mua': entityField.ent_legal_name},
+                'E5': {'diachi_mua': entityField.defaultaddress},
+                'E6': {'phone_mua': entityField.phone},
+                'E7': {'nguoidaidien_mua': entityField.contact_name},
+                'E8': {'chucvu_mua': entityField.position_st},
+
+                [`E${idxRowData}`]: {'total_quan': objData.total_quantity},
+                [`G${idxRowData}`]: {'total_thanhtien': objData.total_thanhtien},
+                [`A${idxRowData + 1}`]: {'amountinword': objData.amountinword},
+                [`A${idxRowData + 2}`]: {'dkg': objData.dkhh_dkg},
+                [`A${idxRowData + 3}`]: {'dssl': objData.dkhh_dssl},
+                [`A${idxRowData + 4}`]: {'dg': objData.dkhh_dg},
+                [`A${idxRowData + 5}`]: {'tccl': objData.dkhh_tccl},
+                [`A${idxRowData + 6}`]: {'shipdate': objData.shipdate},
+                [`A${idxRowData + 7}`]: {'ghtp': objData.dkgh_ghtp},
+                [`A${idxRowData + 8}`]: {'ptgh': objData.dkgh_ptgh},
+                [`A${idxRowData + 9}`]: {'port_of_loading': objData.port_of_loading},
+                [`A${idxRowData + 10}`]: {'port_of_discharge': objData.port_of_discharge},
+                [`A${idxRowData + 12}`]: {'pttt': objData.dktt_pttt},
+                [`A${idxRowData + 13}`]: {'currency': objData.currency},
+                [`A${idxRowData + 14}`]: {'tktt': objData.dktt_tktt},
+                [`A${idxRowData + 15}`]: {'trach_nhiem': objData.dktt_trach_nhiem},
+                [`A${idxRowData + 16}`]: {'dkcd_en': objData.dkcd_en},
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+            colId.forEach((col, index) => {
+                for (let row = idxSourceRow; row < idxRowData; row++) {
+                    let cell = curSheet.getCell(`${String.fromCharCode(65 + index)}${row}`);
+
+                    // Áp dụng border
+                    cell.border = {
+                        top: {style: 'thin', color: {argb: '000000'}},
+                        left: {style: 'thin', color: {argb: '000000'}},
+                        bottom: {style: 'thin', color: {argb: '000000'}},
+                        right: {style: 'thin', color: {argb: '000000'}}
+                    };
+                    if (['E', 'F', 'G'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'right'};
+                    } else if (['A', 'D'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'center'};
+                    } else if (['B', 'C', 'H'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'left'};
+                    }
+                }
+            });
+            let cellA11 = curSheet.getCell('A11');
+            cellA11.font = {name: 'Times New Roman', bold: true, size: 12};
+            cellA11.alignment = {horizontal: 'left'};
+            let boldCells = ['A4', 'A5', 'A6', 'A7', 'A8', 'E5', 'E6', 'E7', 'E4', 'E8'];
+            boldCells.forEach(cellRef => {
+                let cell = curSheet.getCell(cellRef);
+                cell.font = {name: 'Times New Roman', bold: true, size: 12};
+            });
+            let cellA16 = curSheet.getCell(`A${idxRowData + 16}`);
+            cellA16.font = {name: 'Times New Roman', bold: true, size: 12};
+            cellA16.alignment = {horizontal: 'left', wrapText: true};
+            if (objData.dkcd_en.trim() !== '') {
+                const numOfLines = (objData.dkcd_en.match(/ARTICLE\s\d+/g) || []).length;
+                const rowHeight = numOfLines * 33;
+                let cellA16 = curSheet.getCell(`A${idxRowData + 16}`);
+                cellA16.font = {name: 'Times New Roman', bold: true, size: 12};
+                cellA16.alignment = {horizontal: 'left', wrapText: true};
+                curSheet.getRow(idxRowData + 16).height = rowHeight;
+            } else {
+                curSheet.getRow(idxRowData + 16).hidden = true;
+            }
+        };
+
+        const onEXP_sc_vn = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let arrData = objData.arrSL || [];
+            let idxSourceRow = 13;
+            let idxRowData = 14;
+            let colId = ['stt', 'item_display', 'description', 'units', 'quantity',
+                'dongia', 'thanhtien', 'memo_2'];
+            idxRowData = insertValueTable({curSheet, idxSourceRow, idxRowData, arrData, colId});
+            let entityField = objData.entityField;
+            let sub = objData.sub;
+            let objCellReplace = {
+                'A4': {'ben_ban': sub.legalname},
+                'A5': {'diachi_ban': sub.mainaddress_text},
+                'A6': {'phone_ban': sub.phone_no},
+                'A7': {'nguoidaidien_ban': objData.nguoi_dai_dien},
+                'A8': {'chucvu_ban': objData.chuc_vu},
+                'A11': {'ten_mat_hang': objData.so_name_of_goods},
+                'E2': {'sc_name': objData.sc_name},
+                'E3': {'sc_date': objData.sc_date},
+                'E4': {'ben_mua': entityField.ent_legal_name},
+                'E5': {'diachi_mua': entityField.defaultaddress},
+                'E6': {'phone_mua': entityField.phone},
+                'E7': {'nguoidaidien_mua': entityField.contact_name},
+                'E8': {'chucvu_mua': entityField.position_st},
+
+                [`E${idxRowData}`]: {'total_quan': objData.total_quantity},
+                [`G${idxRowData}`]: {'total_thanhtien': objData.total_thanhtien},
+                [`A${idxRowData + 1}`]: {'tienbangchu': objData.tongThanhTien_bangChu},
+                [`A${idxRowData + 2}`]: {'dkg': objData.dkhh_dkg},
+                [`A${idxRowData + 3}`]: {'dssl': objData.dkhh_dssl},
+                [`A${idxRowData + 4}`]: {'dg': objData.dkhh_dg},
+                [`A${idxRowData + 5}`]: {'tccl': objData.dkhh_tccl},
+                [`A${idxRowData + 7}`]: {'shipdate': objData.shipdate},
+                [`A${idxRowData + 8}`]: {'ghtp': objData.dkgh_ghtp},
+                [`A${idxRowData + 9}`]: {'ptgh': objData.dkgh_ptgh},
+                [`A${idxRowData + 11}`]: {'pttt': objData.dktt_pttt},
+                [`A${idxRowData + 12}`]: {'currency': objData.currency},
+                [`A${idxRowData + 13}`]: {'tktt': objData.dktt_tktt},
+                [`A${idxRowData + 14}`]: {'trach_nhiem': objData.dktt_trach_nhiem},
+                [`A${idxRowData + 15}`]: {'dkcd_vn': objData.dkcd_vn},
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+            colId.forEach((col, index) => {
+                for (let row = idxSourceRow; row < idxRowData; row++) {
+                    let cell = curSheet.getCell(`${String.fromCharCode(65 + index)}${row}`);
+                    cell.border = {
+                        top: {style: 'thin', color: {argb: '000000'}},
+                        left: {style: 'thin', color: {argb: '000000'}},
+                        bottom: {style: 'thin', color: {argb: '000000'}},
+                        right: {style: 'thin', color: {argb: '000000'}}
+                    };
+                    if (['E', 'F', 'G'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'right'};
+                    } else if (['A', 'D'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'center'};
+                    } else if (['B', 'C', 'H'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'left'};
+                    }
+                }
+            });
+            let cellA11 = curSheet.getCell('A11');
+            cellA11.font = {name: 'Times New Roman', bold: true, size: 12};
+            cellA11.alignment = {horizontal: 'left'};
+            let boldCells = ['A4', 'A5', 'A6', 'A7', 'A8', 'E5', 'E6', 'E7', 'E4', 'E8'];
+            boldCells.forEach(cellRef => {
+                let cell = curSheet.getCell(cellRef);
+                cell.font = {name: 'Times New Roman', bold: true, size: 12};
+            });
+            if (objData.dkcd_vn.trim() !== '') {
+                const numOfLines = (objData.dkcd_vn.match(/ĐIỀU\s\d+/g) || []).length;
+                const rowHeight = numOfLines * 33;
+                let cellA15 = curSheet.getCell(`A${idxRowData + 15}`);
+                cellA15.font = {name: 'Times New Roman', bold: true, size: 12};
+                cellA15.alignment = {horizontal: 'left', wrapText: true};
+                curSheet.getRow(idxRowData + 15).height = rowHeight;
+            } else {
+                curSheet.getRow(idxRowData + 15).hidden = true;
+            }
+        };
+
+        const onEXP_cl = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let arrData = objData.arrITR || [];
+            let idxSourceRow = 17;
+            let idxRowData = 18;
+            let colId = ['stt', 'description', 'text1', 'text2', 'unit', 'quantity', 'unit_price', 'amount', 'memo_2'];
+            idxRowData = insertValueTable({curSheet, idxSourceRow, idxRowData, arrData, colId});
+            let sdSO = objData.sdSO;
+            let data = objData.data;
+            let objCellReplace = {
+                'D8': {'customer': objData.cus_legal_name},
+                'D9': {'address': objData.cus_defaultaddress},
+                'D10': {'contract_no': objData.sd_contract_name},
+                'D11': {'invoice_no': data.sd_inv_no},
+                'D12': {'terms_of_price': sdSO.dkhh_dkg},
+                'D13': {'port_of_loading': data.port_of_loading},
+                'D15': {'lc_no': data.sd_lc_no},
+                'G10': {'contract_date': objData.sd_contract_date},
+                'G11': {'invoice_date': data.sd_inv_date},
+                'G13': {'port_of_discharge': data.port_of_discharge},
+                'G14': {'currency': sdSO.currency},
+                'G15': {'lc_date': data.sd_lc_date},
+
+                [`F${idxRowData}`]: {'total_quantity': objData.total_quantity},
+                [`H${idxRowData}`]: {'total_amount': objData.total_amount},
+
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+            colId.forEach((col, index) => {
+                for (let row = idxSourceRow; row < idxRowData; row++) {
+                    let cell = curSheet.getCell(`${String.fromCharCode(65 + index)}${row}`);
+                    cell.border = {
+                        top: {style: 'thin', color: {argb: '000000'}},
+                        left: {style: 'thin', color: {argb: '000000'}},
+                        bottom: {style: 'thin', color: {argb: '000000'}},
+                        right: {style: 'thin', color: {argb: '000000'}}
+                    };
+                    if (['F', 'G', 'H'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'right', vertical: 'middle'};
+                    } else if (['A', 'E'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'center', vertical: 'middle'};
+                    } else if (['B', 'I'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'left', vertical: 'middle'};
+                    }
+                }
+            });
+            let cellH = curSheet.getCell(`H${idxRowData}`);
+            cellH.font = {name: 'Times New Roman', size: 12};
+            cellH.alignment = {horizontal: 'right', vertical: 'middle'};
+
+            for(let i = 0; i < arrData.length; i++){
+                curSheet.mergeCells(`B${idxSourceRow + i}:D${idxSourceRow + i}`);
+            }
+        };
+
+        const onEXP_ic = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let ngaythangnam = ngaygioin();
+
+            let sdSO = objData.sdSO;
+            let data = objData.data;
+            let objCellReplace = {
+                'D4': {'so': data.sd_inv_no},
+                'H4': {'trandate': data.sd_inv_date},
+                'B5': {'send_to': data.sd_no_send_to},
+                'C6': {'legal_name': objData.cus_legal_name},
+                'B7': {'address': objData.cus_defaultaddress},
+                'B8': {'phone': objData.cus_phone},
+                'B9': {'mst': objData.cus_tax_number},
+
+                'D14': {'so_lc': data.sd_lc_no},
+                'D15': {'so_hopdong': objData.sd_contract_name},
+                'D16': {'so_hoadon': data.sd_inv_no},
+                'D17': {'tcbb': data.sd_packing},
+                'D18': {'ptxh': data.sd_loading},
+                'D19': {'ptvc': data.sd_transport},
+                'D20': {'name_ptvc': data.sd_vessel},
+                'D21': {'ngay_khoi_hanh': data.sd_start_date},
+                'G14': {'ngay_lc': data.sd_lc_date},
+                'G15': {'ngay_hopdong': objData.sd_contract_date},
+                'G16': {'ngay_hoadon': data.sd_inv_date},
+                'B22': {'sd_from': data.port_of_loading},
+                'F22': {'chuyen_tai': data.sd_transhipment},
+                'H22': {'sd_to': data.port_of_discharge},
+                'E23': {'total_tienbaohiem': objData.total_sthd},
+                'C24': {'dkbh': data.sd_clauses},
+                'C25': {'ttbt': data.sd_claim},
+                'C26': {'thttp': data.sd_due_date},
+                'C27': {'yck': data.sd_others},
+                'G25': {'currency': sdSO.currency},
+                'B28': {'ngaythangnam': ngaythangnam.trandate},
+                'B32': {'nguoilap': objData.requestor_name},
+
+                'A13': {'so_van_don': data.sd_bl_no},
+                'B13': {'so_kien': data.sd_package_no},
+                'D13': {'trong_loung_bi': objData.total_weightGW},
+                'E13': {'ten_hang_hoa': data.sd_description},
+                'H13': {'gt_hoadon': objData.total_amount},
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+            let boldCells = ['A13', 'B13', 'D13', 'E13', 'H13', 'B22', 'F22', 'H22', 'E23', 'C24', 'C25', 'C26', 'C27'];
+            boldCells.forEach(cellRef => {
+                let cell = curSheet.getCell(cellRef);
+                cell.font = {name: 'Times New Roman', bold: true, size: 10};
+            });
+        };
+
+        const onEXP_gl = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let arrData = objData.arrITR || [];
+            let sdSO = objData.sdSO;
+            let data = objData.data;
+            let idxSourceRow = 16;
+            let idxRowData = 17;
+            let colId = ['stt', 'description', 'text1', 'text2', 'text3', 'unit', 'quantity', 'weight', 'weightGW'];
+            idxRowData = insertValueTable({curSheet, idxSourceRow, idxRowData, arrData, colId});
+            let objCellReplace = {
+                'C8': {'customer': objData.cus_legal_name},
+                'C9': {'address': objData.cus_defaultaddress},
+                'C10': {'contract_no': objData.sd_contract_name},
+                'C11': {'inv_no': data.sd_inv_no},
+                'C12': {'terms_of_price': sdSO.dkhh_dkg},
+                'C13': {'port_of_loading': data.port_of_loading},
+                'C14': {'lc_no': data.sd_lc_no},
+                'G10': {'contract_date': objData.sd_contract_date},
+                'G11': {'inv_date': data.sd_inv_date},
+                'G13': {'port_of_discharge': data.port_of_discharge},
+                'G14': {'lc_date': data.sd_lc_date},
+
+                [`G${idxRowData}`]: {'total_quantity': objData.total_quantity},
+                [`H${idxRowData}`]: {'total_nw': objData.total_weight},
+                [`I${idxRowData}`]: {'total_gw': objData.total_weightGW},
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+
+            colId.forEach((col, index) => {
+                for (let row = idxSourceRow; row < idxRowData; row++) {
+                    let cell = curSheet.getCell(`${String.fromCharCode(65 + index)}${row}`);
+                    cell.border = {
+                        top: {style: 'thin', color: {argb: '000000'}},
+                        left: {style: 'thin', color: {argb: '000000'}},
+                        bottom: {style: 'thin', color: {argb: '000000'}},
+                        right: {style: 'thin', color: {argb: '000000'}}
+                    };
+                    if (['G', 'H', 'I'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'right', vertical: 'middle'};
+                    } else if (['A', 'F'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'center', vertical: 'middle'};
+                    } else if (['B'].includes(String.fromCharCode(65 + index))) {
+                        cell.font = {name: 'Times New Roman', size: 12};
+                        cell.alignment = {horizontal: 'left', vertical: 'middle'};
+                    }
+                }
+            });
+            let boldCells = [[`G${idxRowData}`],[`H${idxRowData}`], [`I${idxRowData}`]];
+            boldCells.forEach(cellRef => {
+                let cell = curSheet.getCell(cellRef);
+                cell.font = {name: 'Times New Roman', bold: true, size: 12};
+            });
+            for(let i = 0; i < arrData.length; i++){
+                curSheet.mergeCells(`B${idxSourceRow + i}:E${idxSourceRow + i}`);
+            }
+        };
+
+        const onEXP_bl = async (workbook, objData) => {
+            let curSheet = workbook.worksheets[0];
+            let ngaythangnam = ngaygioin();
+            let sdSO = objData.sdSO;
+            let sub = objData.sub;
+            let data = objData.data;
+            let objCellReplace = {
+                'B4': {'tranid': sdSO.tranid},
+                'B6': {'sub_legalname': sub.legalname},
+                'B7': {'sub_address': sub.mainaddress_text},
+                'B8': {'sub_tel': sub.phone_no},
+                'B9': {'cus_legalname': objData.cus_legal_name},
+                'B10': {'cus_address': objData.cus_defaultaddress},
+                'B11': {'cus_tel': objData.cus_phone},
+                'B12': {'notify_legalname': objData.cus_legal_name},
+                'B13': {'notify_address': objData.cus_defaultaddress},
+                'B14': {'notify_tel': objData.cus_phone},
+                'B15': {'vessel': data.sd_vessel},
+                'B16': {'port_of_loading': data.port_of_loading},
+                'B17': {'port_of_discharge': data.port_of_discharge},
+                'B18': {'container': data.sd_container},
+                'B19': {'number_of_packages': data.sd_package_no},
+                'B20': {'des_of_goods': data.sd_description},
+                'B21': {'gross_weight': objData.total_weightGW},
+                'B22': {'ship_mark': data.sd_mark},
+                'B23': {'freight': data.sd_freight},
+                'B25': {'trandate': ngaythangnam.trandateEng},
+            };
+            replaceValueColumn(curSheet, objCellReplace);
+            let cellB25 = curSheet.getCell('B25');
+            cellB25.font = {name: 'Times New Roman', size: 12, bold: true};
+            cellB25.alignment = {horizontal: 'center', vertical: 'middle'};
+        };
+
+        const insertValueTable = (params) => {
+            let curSheet = params.curSheet;
+            let idxSourceRow = params.idxSourceRow;
+            let idxRowData = params.idxRowData;
+            let arrData = params.arrData;
+            let rowSrc = curSheet.getRow(idxSourceRow);
+            let arrLength = arrData.length;
+            if (arrLength == 0) {
+                let obj = {}
+                params.colId.forEach(col => {
+                    obj[col] = '';
+                })
+                arrData.push(obj);
+                arrLength = 1;
+            }
+            for (let i = 0; i < arrLength; i++) {
+                let dataRow = getValueRow(arrData[i], params.colId);
+                let newRow = curSheet.insertRow(idxRowData, dataRow);
+                rowSrc.eachCell((cell, colNumber) => {
+                    let newCell = newRow.getCell(colNumber);
+                    newCell.style = cell.style;
+                });
+                idxRowData += 1;
+            }
+            curSheet.spliceRows(idxSourceRow, 1);
+            syncRangeMergeAfterInsertRow(curSheet, idxSourceRow, arrLength - 1);
+            return idxRowData - 1;
+        }
+
+        const getPositionCell = (_ws, _pos) => {
+            let objPos = {row: 1, col: 1, address: "A1"};
+
+            if (typeof _pos == "string") {
+                objPos.address = _pos.toUpperCase();
+
+                let cell_start = _ws.getCell(objPos.address);
+
+                objPos.row = cell_start.row;
+                objPos.col = cell_start.col;
+            } else if (typeof _pos == "object") {
+                objPos.row = _pos.row || 1;
+                objPos.col = _pos.col || 1;
+
+                let cell_start = _ws.getCell(objPos.row, objPos.col);
+
+                objPos.address = cell_start._address;
+            }
+
+            return objPos;
+        }
+
+        const syncRangeMergeAfterInsertRow = (_ws, _rowStartInsert, _numLineInserted) => {
+            let arrRangeMerge = _ws.model.merges;
+            let arrRangeMergeFinal = [];
+            for (let i = 0; i < arrRangeMerge.length; i++) {
+                let address_range = arrRangeMerge[i];
+                let address_cell_start = getPositionCell(_ws, address_range.split(":")[0]);
+                let address_cell_end = getPositionCell(_ws, address_range.split(":")[1]);
+
+                if (address_cell_start.row >= _rowStartInsert) {
+                    _ws.unMergeCells(address_range);
+                    arrRangeMergeFinal.push({
+                        row_start: address_cell_start.row + _numLineInserted,
+                        col_start: address_cell_start.col,
+                        row_end: address_cell_end.row + _numLineInserted,
+                        col_end: address_cell_end.col
+                    })
+                }
+            }
+            for (let i = 0; i < arrRangeMergeFinal.length; i++) {
+                let objRangeMerge = arrRangeMergeFinal[i];
+                _ws.mergeCells(objRangeMerge.row_start, objRangeMerge.col_start, objRangeMerge.row_end, objRangeMerge.col_end);
+            }
+        }
+
+        const getValueRow = (objData, arrHeader) => {
+            let arrResult = [];
+            arrHeader.forEach(col => {
+                arrResult.push(objData[col] || "")
+            })
+            return arrResult;
+        }
+
+        const replaceValueColumn = (curSheet, objCellReplace) => {
+            try {
+                for (let cellRef in objCellReplace) {
+                    let cell = curSheet.getCell(cellRef);
+                    if (cell) {
+                        let objData = objCellReplace[cellRef];
+                        for (let key in objData) {
+                            let vla = objData[key] || '';
+                            if (key === 'all') cell.value = vla;
+                            else cell.value = cell.value.replaceAll(`{${key}}`, vla);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log("error - replaceValueColumn", error)
+            }
+        }
+
+        const postRequestByAjax = (_urlReq, _params) => {
+            return new Promise((resolve, reject) => {
+                jQuery.ajax({
+                    type: 'post',
+                    url: _urlReq,
+                    dataType: 'json',
+                    async: true,
+                    data: {..._params},
+                })
+                    .done(function (response) {
+                        resolve(response);
+                    })
+                    .fail(function (request, status, error) {
+                        console.log(error);
+                        resolve(error);
+                    })
+            });
+        }
+        const loadWorkbookFromUrl = async (urlFile) => {
+            let workbook = null;
+            await fetch(urlFile).then(res => res.blob())
+                .then(async blob => {
+                    let buf = await blob.arrayBuffer();
+                    workbook = new ExcelJS.Workbook();
+                    await workbook.xlsx.load(buf);
+                })
+            return workbook;
+        }
+
+        const saveWorkbook = async (workbook, name) => {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer]), name);
+            });
+        }
+
+        function ngaygioin() {
+            let today = new Date();
+            let timezoneOffset = today.getTimezoneOffset() / 60;
+            today.setHours(today.getHours() + timezoneOffset + 7);
+            let dd_now = String(today.getDate()).padStart(2, '0');
+            let mm_now = String(today.getMonth() + 1).padStart(2, '0');
+            let yyyy_now = today.getFullYear();
+            let hh_now = String(today.getHours()).padStart(2, '0');
+            let minutes_now = String(today.getMinutes()).padStart(2, '0');
+            // let vietnamTime = dd_now + '/' + mm_now + '/' + yyyy_now + ' ' + hh_now + ':' + minutes_now;
+            let trandate = 'Ngày ' + dd_now + ' tháng ' + mm_now + ' năm ' + yyyy_now;
+            let trandateEng = 'Date ' + dd_now + ' month ' + mm_now + ' year ' + yyyy_now;
+            return {trandate, trandateEng};
+        }
+
+        const showLoadingDialog = (isShow) => {
+            let progessElement = "";
+            if (isShow) {
+                let container = document.getElementById("pageContainer") || document.getElementById("outerwrapper");
+                if (!container) return console.error("Not found ElementId");
+
+                loadStyleToHtmlPage(container);
+                let mainLoader = document.createElement('div');
+                mainLoader.classList.add("scvMainLoader");
+                mainLoader.innerHTML = '<span class="scvLoader"></span><span id="idxProgessStatus" class="scvProgessStatus">Processing...</span>';
+
+                container.appendChild(mainLoader);
+                progessElement = document.querySelector(".scvProgessStatus");
+            } else {
+                let mainLoader = document.querySelector(".scvMainLoader");
+                if (mainLoader) mainLoader.remove();
+            }
+            return progessElement;
+        }
+
+        const loadStyleToHtmlPage = (container) => {
+            let addLoading = container.getAttribute("scv-add-loading");
+            if (addLoading === "T") return;
+            container.setAttribute("scv-add-loading", "T");
+
+            let linkElement = document.createElement('style');
+            let textNode = document.createTextNode(`
+                .scvLoader {
+                    width: 100px; height: 100px; 
+                    border: 8px solid #e0e0e0; 
+                    border-bottom-color: #0288d1;
+                    border-radius: 50%; display: inline-block; box-sizing: border-box; position: fixed;
+                    transform: translate(-50%, -50%); animation: scvRotationLoading 1s linear infinite;
+                }
+                .scvProgessStatus {
+                    position: fixed; top: 50%; left: 50%; font-size: 12px; transform: translate(-50%, -50%);
+                }
+                .scvMainLoader {
+                    position: fixed; top: 0; left: 0; height: 100%; width: 100%; z-index: 9999;
+                    display: flex; justify-content:center; align-items:center; 
+                    flex-direction: column; background-color: rgba(255, 255, 255, 0.85);
+                }
+                @keyframes scvRotationLoading {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }`
+            );
+            linkElement.appendChild(textNode);
+            document.head.appendChild(linkElement);
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<manifest projecttype="ACCOUNTCUSTOMIZATION">
+  <projectname>Demo1</projectname>
+  <frameworkversion>1.0</frameworkversion>
+  <dependencies>
+    <features>
+      <feature required="true">SERVERSIDESCRIPTING</feature>
+      <feature required="false">CRM</feature>
+      <feature required="false">CREATESUITEBUNDLES</feature>
+      <feature required="true">WORKORDERS</feature>
+      <feature required="true">ADVANCEDPRINTING</feature>
+      <feature required="true">PAYABLES</feature>
+      <feature required="true">ACCOUNTING</feature>
+    </features>
+    <objects>
+      <object>customrecord_scv_rc_test</object>
+      <object>customrecord_scv_cmms_toolscheck_h</object>
+      <object>customrecord_scv_test_order</object>
+    </objects>
+  </dependencies>
+</manifest>

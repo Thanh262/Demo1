@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_scv_thh_sl_test_modulerende">
+  <description>Example script to test suitelet</description>
+  <isinactive>F</isinactive>
+  <name>SCV Suitelet Render module</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Demo1/sl/scv_thh_test_modulerender.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_scv_thh_sl_test_modulerende">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole></runasrole>
+      <status>TESTING</status>
+      <title>SCV Suitelet Render module</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

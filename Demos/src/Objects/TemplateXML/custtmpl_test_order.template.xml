@@ -1,0 +1,52 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<head>  
+  <style type="text/css">   
+    table {
+      width: 100%;
+      font-size: 12pt;
+    }
+    .tbl-chuky {
+      margin-top: 15px;
+      font-size: 10.5pt;
+    }
+    .tbl-chuky p{
+      align: center;
+    }
+    .tbl-header p{
+      align: center;
+      font-weight: bold;
+    }
+    .tieu-de {
+      margin-top: 15px;
+    }
+    .tbl-body p{
+       align: left;
+    }
+    body {
+      color: #002060;
+	}
+    p {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body size="A4" padding="0.25in 0.25in 0.25in 0.25in">
+  <table>
+    <tr>
+      <td colspan="65" >
+        <p> <b>Company: ${companyinformation.companyname}</b> <br/> <span><b>Address: </b></span> </p>
+      </td>
+      <td colspan="35">
+        <p align="center" font-weight= "normal"><b>Biểu mẫu 02-PXK</b><br/><span font-size="9pt">(Ban hành theo TT số 210/2014/TT-BTC<br/>Ngày 30/12/2014 của Bộ Tài chính)</span></p>
+      </td>
+    </tr>
+  </table>
+  <table>
+<tr>
+  <td>${record.name?c_upper_case}</td>
+</tr>
+    
+  </table>
+</body>
+</pdf>

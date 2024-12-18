@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_scv_test_assistant">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>SL Test Asistant</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Demo1/sl/scv_test_assistant.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_scv_test_assistant">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole></runasrole>
+      <status>TESTING</status>
+      <title>SL Test Asistant</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

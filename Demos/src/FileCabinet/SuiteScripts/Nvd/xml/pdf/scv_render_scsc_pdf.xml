@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <head>
+        <link name="ScvFont" type="font" subtype="opentype" src="${libPdf.font.times?html}"
+              src-bold="${libPdf.font.times_bold?html}"
+              src-italic="${libPdf.font.times_italic?html}"
+              src-bolditalic="${libPdf.font.times_bolditalic?html}" bytes="2" />
+        <style type="text/css">
+            ${libPdf.css}
+            .header {
+            font-size: 14pt;
+            text-align: center;
+            font-weight: bold;
+            }
+            .sub-header {
+            font-size: 10;
+            text-align: center;
+            }
+            .border-table td {
+            border: 0.5px solid black;
+            padding: 5px;
+            text-align: center;
+            }
+        </style>
+    </head>
+    <#setting locale="de_DE">
+    <#function formatNumberDE value>
+    <#if value?? && value?number??>
+    <#return value?number?string.number>
+    <#else>
+    <#return "">
+</#if>
+        </#function>
+    <body padding="0.2in 0.2in 0.2in 0.2in" size="A4-LANDSCAPE">
+        <!-- Header -->
+        <table width="100%" border="0">
+            <tr>
+                <td width="15%" align="center">
+                    ${jsonData.configLogo}
+                </td>
+                <td width="70%" align="center">
+                    <font size="12pt" style="bold">PHIẾU SỬA CHỮA SỰ CỐ</font>
+                    <br/>
+                    <font size="10pt">SỐ: ${record.name}</font>
+                </td>
+                <td width="15%" align="right">
+                    <font size="10pt">BM-KyT-01-05<br/>13/12/2021</font>
+                </td>
+            </tr>
+        </table>
+        <table width="100%" border="1" cellpadding="2">
+            <tr>
+                <td width="10%">Tên thiết bị:</td>
+                <td width="40%">${record.custrecord_scv_cmms_wo_equipment}</td>
+                <td width="10%">Người mở phiếu:</td>
+                <td width="40%">${record.custrecord_scv_cmms_wo_creator}</td>
+            </tr>
+            <tr>
+                <td>BP sử dụng:</td>
+                <td>${jsonData.cassetdepartment}</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Mã hiệu/ vị trí:</td>
+                <td>${jsonData.mahieu_vitri}</td>
+                <td>Ngày:</td>
+                <td>${record.custrecord_scv_cmms_wo_date}</td>
+            </tr>
+        </table>
+        <table width="100%" border="1" cellpadding="2" border-top="none">
+            <tr>
+                <td width="10%">Nội dung:</td>
+                <td width="90%">${record.custrecord_scv_cmms_wo_description}</td>
+            </tr>
+        </table>
+
+        <!-- Bảng thông tin chi tiết -->
+        <table width="100%" border="1" cellpadding="2" border-top="none">
+            <tr>
+                <td width="10%">Nguyên nhân:</td>
+                <td>${record.custrecord_scv_cmms_wo_description}</td>
+            </tr>
+            <tr>
+                <td>Ngày:</td>
+                <td>${jsonData.wo_timeissue}</td>
+            </tr>
+            <tr>
+                <td>Ký tên:</td>
+                <td></td>
+            </tr>
+        </table>
+        <table width="100%" border="1" cellpadding="2" border-top="none">
+            <tr>
+                <td width="10%">Biện pháp xử lý</td>
+                <td>${record.custrecord_scv_cmms_wo_repairnote}</td>
+            </tr>
+            <tr>
+                <td>Ngày:</td>
+                <td>${record.custrecord_scv_cmms_wo_actualfromdate}</td>
+            </tr>
+            <tr>
+                <td>Ký tên:</td>
+                <td></td>
+            </tr>
+        </table>
+        <table width="100%" border="1" cellpadding="2" border-top="none">
+            <tr>
+                <td width="10%">Kết quả xử lý:</td>
+                <td>${record.custrecord_scv_cmms_wo_status}</td>
+            </tr>
+            <tr>
+                <td>Ngày:</td>
+                <td>${record.custrecord_scv_cmms_wo_actualtodate}</td>
+            </tr>
+            <tr>
+                <td>BP thực hiện:</td>
+                <td>${jsonData.creator_department}</td>
+            </tr>
+            <tr>
+                <td>Ký tên:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>BP nghiệm thu:</td>
+                <td>${jsonData.creator_department}</td>
+            </tr>
+            <tr>
+                <td>Ký tên:</td>
+                <td></td>
+            </tr>
+        </table>
+
+        <!-- Bảng thời gian -->
+        <table width="100%" class="border-table mt-8" >
+            <tr class="font-weight-bold">
+            <td width="20%" rowspan="2" align="center" border-right="none">Thời gian xảy ra sự cố</td>
+            <td width="20%" rowspan="2" align="center" border-right="none">Thời gian bảo bộ phận sửa chữa</td>
+            <td width="40%" colspan="2" align="center" border-right="none">Thời gian xử lý, lắp đặt thay thế</td>
+            <td width="20%" rowspan="2" align="center" >Tổng thời gian dừng máy</td>
+            </tr>
+            <tr class="font-weight-bold">
+                <td width="20%" align="center" border-top="none" border-right="none">Bắt đầu</td>
+                <td width="20%" align="center" border-top="none" border-right="none">Kết thúc</td>
+            </tr>
+            <tr >
+                <td align="center" width="20%" border-top="none" border-right="none">${jsonData.timeissue}</td>
+                <td align="center" width="20%" border-top="none" border-right="none">${record.custrecord_scv_cmms_wo_date} .....giờ.....phút</td>
+                <td align="center" width="20%" border-top="none" border-right="none">${record.custrecord_scv_cmms_wo_actualfromdate } ${jsonData.actualfromtime}</td>
+                <td align="center" width="20%" border-top="none" border-right="none">${record.custrecord_scv_cmms_wo_actualtodate } ${jsonData.actualtotime}</td>
+                <td align="center" width="20%" border-top="none" >.....giờ.....phút</td>
+            </tr>
+        </table>
+
+        <table width="100%" class="border-table mt-8">
+            <tr class="font-weight-bold">
+                <td width="100%" align="center" colspan="100" border-bottom="none">Vật tư thay thế</td>
+
+            </tr>
+            <tr class="font-weight-bold">
+                <td align="center" border-right="none" colspan="5">TT</td>
+                <td align="center" border-right="none" colspan="50">Tên chi tiết</td>
+                <td align="center" border-right="none" colspan="15">ĐVT</td>
+                <td align="center" border-right="none" colspan="15">Số lượng</td>
+                <td align="center" colspan="15">Tình trạng</td>
+            </tr>
+            <#list jsonData.rsBGWO as line>
+            <tr>
+                <td align="center" border-right="none" border-top="none"  colspan="5">${line.stt}</td>
+                <td align="center" border-right="none" border-top="none" colspan="50">${line.bg_actualitem}</td>
+                <td align="center" border-right="none" border-top="none" colspan="15">${line.bg_unit}</td>
+                <td align="center" border-right="none" border-top="none" colspan="15">${line.bg_actualquantity}</td>
+                <td align="center" colspan="15"> </td>
+            </tr>
+        </#list>
+    </table>
+    </body>
+</pdf>

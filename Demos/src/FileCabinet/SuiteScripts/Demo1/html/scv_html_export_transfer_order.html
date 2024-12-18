@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript"
+            src="https://9363397.app.netsuite.com/core/media/media.nl?id=8054&c=9363397&h=Yqod5xAWpxJBN55w1do6XLHcbEajJSo5oJg-R_FmGKqeJOMA&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=8055&c=9363397&h=2PNnZJIgZ53nMfztkogvwLa6anhZiDswDDgMNq6GuwDmMJ6l&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=8056&c=9363397&h=TuHtw-j_HMCI4PyCkfFdgCqxfcd4sN4HrPELcguREW42jJMJ&_xt=.js"></script>
+    <script src="https://9363397.app.netsuite.com/core/media/media.nl?id=1496&c=9363397&h=-jhuz5-21N8CYZ6Av9vyooO-pPw4N18snk48FXBHuKJ9muQz&_xt=.js"></script>
+    <style>
+    </style>
+    <script>
+        const SUITELET_URL = '/app/site/hosting/scriptlet.nl?script=customscript_scv_th_sl_transferord_data&deploy=customdeploy_scv_th_sl_transferord_data';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            addIconToButton('custpage_btn_export_excel_transfer_order');
+            addIconToButton('secondarycustpage_btn_export_excel_transfer_order'); // netsuite tạo ra 2 nút, 1 ở trên, 1 ở dưới, nút dưới có thêm secondary ở đầu
+        });
+
+        $(() => {
+            window.onExportExcel = async (params) => {
+                try {
+                    let {data, templateUrl} = await postRequestWithAjax(SUITELET_URL, {...params});
+                    let workbook = await getWorkbook(templateUrl);
+                    let worksheet = workbook.worksheets[0];
+                    worksheet.pageSetup = {
+                        orientation: 'portrait' // Set to 'portrait' for vertical layout
+                    };
+                    let objHeaderData = mapHeaderData(data)
+                    let indexTemplateRow = 10;
+                    let initialIndexDataRow = 11;
+                    let colId = ['stt', 'itemCode', 'item_display', 'units_display', 'custitemnumber_scv_item_num_color_seri', 'inventorynumber', 'quantity', 'itemffm', 'status', 'custcol_scv_memo']
+                    populateExcel(worksheet, objHeaderData, data, indexTemplateRow, initialIndexDataRow, colId)
+                    await saveWorkbook(workbook, 'YeuCauDieuChuyen.xlsx');
+                } catch (e) {
+                    log.error(e);
+                }
+            }
+        });
+
+        const populateExcel = (worksheet, objHeaderData, data, indexTemplateRow, initialIndexDataRow, colId) => {
+            populateExcelHeader(worksheet, objHeaderData);
+            let newIndexDataRow = populateItemList(worksheet, data, indexTemplateRow, initialIndexDataRow, colId);
+            addExcelFooter(worksheet, initialIndexDataRow, newIndexDataRow, indexTemplateRow);
+        }
+
+        const addExcelFooter = (worksheet, initialIndexDataRow, newIndexDataRow, indexTemplateRow) => {
+            let workSheetAllMerges = worksheet.model.merges;
+            let insertedLines = newIndexDataRow - indexTemplateRow - 1;
+
+            unmergeCellsAfterLastDataRow(worksheet, workSheetAllMerges, initialIndexDataRow, newIndexDataRow);
+            createNewMerges(worksheet, workSheetAllMerges, initialIndexDataRow, newIndexDataRow, insertedLines);
+        }
+
+        const unmergeCellsAfterLastDataRow = (worksheet, workSheetAllMerges, initialIndexDataRow, indexDataRow) => {
+            for (let mergeArea of workSheetAllMerges) {
+                let startCell = mergeArea.split(':')[0];
+                let startRow = parseInt(startCell.match(/\d+/)[0])
+
+                if (indexDataRow >= startRow && startRow > initialIndexDataRow) {
+                    worksheet.unMergeCells(mergeArea);
+                }
+            }
+        }
+
+        const createNewMerges = (worksheet, workSheetAllMerges, initialIndexDataRow, newIndexDataRow, insertedLines) => {
+            for (let mergeArea of workSheetAllMerges) {
+                let startCell = mergeArea.split(':')[0];
+                let endCell = mergeArea.split(':')[1];
+
+                let oldStartRow = parseInt(startCell.match(/\d+/)[0])
+                let oldEndRow = parseInt(endCell.match(/\d+/)[0])
+
+                if (newIndexDataRow >= oldStartRow && oldStartRow >= initialIndexDataRow) {
+                    let newStartCell = `${startCell[0]}${oldStartRow + insertedLines - 1}`;
+                    let newEndCell = `${endCell[0]}${oldEndRow + insertedLines - 1}`;
+                    let newMergeArea = `${newStartCell}:${newEndCell}`;
+                    worksheet.mergeCells(newMergeArea);
+                    if( oldStartRow === initialIndexDataRow){
+                        worksheet.getCell(newStartCell).style.border = {
+                            top: { style: 'thin', color: { argb: 'FF000000' } },   // Set top border
+                            left: { style: 'thin', color: { argb: 'FF000000' } },  // Set left border
+                            bottom: { style: 'thin', color: { argb: 'FF000000' } }, // Set bottom border
+                            right: { style: 'thin', color: { argb: 'FF000000' } }   // Set right border
+                        };
+                    }
+                }
+            }
+        }
+
+        const populateExcelHeader = (worksheet, objHeaderData) => {
+            for (let cell in objHeaderData) {
+                let valueObj = objHeaderData[cell];
+                for(let [key,value] of Object.entries(valueObj)) {
+                    let cellValue = worksheet.getCell(cell).value;
+                    worksheet.getCell(cell).value = cellValue.replace(`{${key}}`, value);
+                }
+            }
+        }
+
+        const populateItemList = (worksheet, data, indexTemplateRow, indexDataRow, colId) => {
+            // items = [ {stt: 1 , itemcode: 'gafef ', }, {stt : 2, itemcode : 'fef',,,}]
+            let items = data.items;
+            let templateRow = worksheet.getRow(indexTemplateRow)
+
+            let itemsLength = items.length;
+            if (itemsLength === 0) {
+                let obj = {}
+                colId.forEach(col => {
+                    obj[col] = '';
+                })
+                items.push(obj);
+                itemsLength = 1;
+            }
+            for (let i = 0; i < itemsLength; i++) {
+                let dataRow = getRowData(items[i], colId);
+                let newRow = worksheet.insertRow(indexDataRow, dataRow);
+                templateRow.eachCell({includeEmpty: true}, (cell, colNumber) => {
+                    let newCell = newRow.getCell(colNumber);
+                    newCell.style = cell.style;
+                });
+                indexDataRow += 1;
+            }
+            worksheet.spliceRows(indexTemplateRow, 1);
+            return indexDataRow;
+        }
+
+        const getRowData = (item, colId) => {
+            let dataRow = [];
+            for (let col of colId) {
+                dataRow.push(item[col])
+            }
+            return dataRow;
+        }
+
+        const mapHeaderData = (data) => {
+            return {
+                'A1': {legalname: data.headerData.legalname},
+                'A2': {mainaddress_text: data.headerData.mainaddress_text},
+                'D4': {trandate: data.headerData.trandate},
+                'D5': {tranid: data.headerData.tranid},
+                'A6': {employee: data.headerData.employee},
+                'D6': {department: data.headerData.department},
+                'C7': {memo: data.headerData.memo},
+                'A8': {location: data.headerData.location, transferlocation: data.headerData.transferlocation},
+                //'D8': {transferlocation: data.headerData.transferlocation},
+                'G11': {tongyc: data.tongSoLuongYC},
+                'H11': {tongthuc: data.tongSoLuongThuc}
+            }
+        }
+
+        const postRequestWithAjax = async (url, params) => {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: url,
+                    method: 'post',
+                    data: {...params},
+                    dataType: 'json',
+                    async: true
+                })
+                    .done(response => {
+                        resolve(response);
+                    })
+                    .fail((jqXHR, textStatus, errorThrown) => {
+                        reject({
+                            status: jqXHR.status,
+                            statusText: textStatus,
+                            responseText: jqXHR.responseText,
+                            error: errorThrown
+                        })
+                    })
+            })
+        }
+
+        const getWorkbook = async (url) => {
+            const rawExcelTemplate = await fetch(url);
+            const blob = await rawExcelTemplate.blob();
+            const buffer = await blob.arrayBuffer();
+            let workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.load(buffer);
+            return workbook;
+        }
+
+        const saveWorkbook = async (workbook, name) => {
+            const buffer = await workbook.xlsx.writeBuffer(); // Await the promise
+            saveAs(new Blob([buffer]), name); // Save the file
+        };
+
+        const addIconToButton = (buttonId) => {
+            const buttonElement = document.getElementById(buttonId); // Get the button by ID
+            if (buttonElement) {
+                // Set the button's style for Excel icon
+                buttonElement.style.setProperty('padding-left', '24px', 'important'); // Add padding
+                buttonElement.style.setProperty('background-image', 'url("https://img.icons8.com/fluency/24/microsoft-excel-2019.png")', 'important'); // Set background image
+                buttonElement.style.setProperty('background-repeat', 'no-repeat', 'important'); // Prevent background repeat
+                buttonElement.style.setProperty('background-color', 'pink', 'important');
+                buttonElement.style.setProperty('color', 'white', 'important');
+            } else {
+                console.error('Button with ID', buttonId, 'not found.'); // Log error if button not found
+            }
+        }
+
+    </script>
+</head>
+<body>
+</body>
+</html>

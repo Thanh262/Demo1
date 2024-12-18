@@ -1,0 +1,44 @@
+<suitelet scriptid="customscriptscv_sl_testorder">
+  <description>Suitelet for testorder - demo</description>
+  <isinactive>F</isinactive>
+  <name>SuiteDream SL Test Order</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Demo1/sl/scv_thh_sl_testorder.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeployscv_sl_testorder">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>ERROR</loglevel>
+      <runasrole></runasrole>
+      <status>RELEASED</status>
+      <title>SuiteDream SL Test Order</title>
+    </scriptdeployment>
+    <scriptdeployment scriptid="customdeployscv_thh_sl_testorder">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>ERROR</loglevel>
+      <runasrole></runasrole>
+      <status>RELEASED</status>
+      <title>SuiteDream SL Test Order 2</title>
+      <links>
+        <link>
+          <linkcategory>BASICSETUPCUSTOM</linkcategory>
+          <linklabel>SL Test Order</linklabel>
+        </link>
+      </links>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>
